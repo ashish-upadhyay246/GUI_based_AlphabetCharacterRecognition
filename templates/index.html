@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Draw and Predict</title>
+</head>
+<body>
+    <!-- Your UI elements go here -->
+    <canvas id="drawingCanvas" width="300" height="300"></canvas>
+    <button id="predictButton">Predict</button>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+    const canvas = document.getElementById('drawingCanvas');
+    const predictButton = document.getElementById('predictButton');
+    const context = canvas.getContext('2d');
+
+    let drawing = false;
+
+    canvas.addEventListener('mousedown', function(event) {
+        drawing = true;
+        draw(event);
+    });
+
+    canvas.addEventListener('mousemove', function(event) {
+        if (drawing) {
+            draw(event);
+        }
+    });
+
+    canvas.addEventListener('mouseup', function() {
+        drawing = false;
+    });
+
+    function draw(event) {
+        // Your drawing logic using the canvas and context
+        // ...
+
+        // Send data to Flask backend
+        const imageData = canvas.toDataURL('image/png');
+        fetch('/draw', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ imageData }),
+        })
+        .then(response => response.json())
+        .then(data => console.log(data))
+        .catch(error => console.error('Error:', error));
+    }
+
+    predictButton.addEventListener('click', function() {
+        // Add logic for prediction
+        // ...
+    });
+});
+
+    </script>
+</body>
+</html>
